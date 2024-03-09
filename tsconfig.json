@@ -1,0 +1,18 @@
+{
+  "files": [],
+  "compilerOptions": {
+    "baseUrl": "./src/renderer/src/",
+    "paths": {
+      // "@renderer/*": ["./src/renderer/src/*"]
+      // "custom/*": ["./src/renderer/src/hooks/custom/*"],
+      // "reducers/*": ["./src/renderer/src/store/reducers/*"],
+      // "components/*": ["./src/renderer/src/components/*"]
+    },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true
+  },
+  "include": ["/src"],
+  "references": [{ "path": "./tsconfig.node.json" }, { "path": "./tsconfig.web.json" }]
+}
