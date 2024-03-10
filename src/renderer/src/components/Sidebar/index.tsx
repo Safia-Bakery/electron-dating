@@ -6,23 +6,24 @@ import { useAppDispatch, useAppSelector } from '../../store/rootConfig'
 import { sidebarHandler, toggleSidebar } from '../../store/reducers/selects'
 import { logoutHandler } from '../../store/reducers/auth'
 import { isMobile } from '../../utils/helpers'
+import qrimage from '../../assets/images/qrimage.png'
 
 const routes = [
   {
     name: 'dishes',
     url: '/dishes',
-    icon: '/images/dish.png'
+    icon: '../../assets/images/dish.png'
   },
   {
     name: 'products',
     url: '/products',
-    icon: '/images/products.png',
+    icon: '../../assets/images/products.png',
     param: ''
   },
   {
     name: 'templates',
     url: '/templates',
-    icon: '/images/templates.png',
+    icon: '../../assets/images/templates.png',
     hasLine: true
   }
 ]
@@ -50,7 +51,7 @@ const Sidebar = () => {
       >
         <div className="flex flex-col justify-between relative z-3">
           <div className={`${styles.link} ${styles.logo}`}>
-            <img height={20} width={20} src={'/images/qrimage.png'} className={styles.routeIcon} />
+            <img height={20} width={20} src={qrimage} className={styles.routeIcon} />
             <h3 className={styles.subTitle}>{t('dating')}</h3>
           </div>
           <ul className="nav flex-col flex">

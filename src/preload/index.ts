@@ -1,37 +1,16 @@
-import { IpcRendererEvent, WebContentsPrintOptions, contextBridge, ipcRenderer } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
-
-// Custom APIs for renderer
-const api = {}
-
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
-if (process.contextIsolated) {
-  try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
-    console.error(error)
-  }
-} else {
-  // @ts-ignore (define in dts)
-  window.electron = electronAPI
-  // @ts-ignore (define in dts)
-  window.api = api
-}
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// See the Electron documentation for details on how to use preload scripts:
+// https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
+import { contextBridge, ipcRenderer, IpcRendererEvent, WebContentsPrintOptions } from 'electron'
 
 type Channels = 'get-printers' | 'ipc-print' | 'notification'
 
-const electronHandler = {
+export const electronHandler = {
   sendMessage(channel: Channels, args: any) {
     ipcRenderer.send(channel, args)
   },
   print(options: WebContentsPrintOptions) {
     ipcRenderer.send('ipc-print', options)
-  },
-  notify(options: { title: string; body: string }) {
-    ipcRenderer.send('notification', options)
   },
 
   on(channel: Channels, func: (...args: any) => void) {

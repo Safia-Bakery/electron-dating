@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import styles from './index.module.scss'
 import cl from 'classnames'
+import safiaLogo from '../../assets/images/safia-logo.png'
 
 interface Props {
   absolute?: boolean
@@ -10,7 +11,7 @@ interface Props {
 const Loading: FC<Props> = ({ absolute = false, className }) => {
   return (
     <div className={cl(className, styles.wrap, { [styles.absolute]: absolute })}>
-      <img src="/images/loader.gif" alt="loading..." />
+      <img src={safiaLogo} height={50} width={50} alt="loading..." />
     </div>
   )
 }

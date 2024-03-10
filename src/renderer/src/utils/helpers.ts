@@ -39,3 +39,11 @@ export const isMobile = window.innerWidth <= 960
 export const dateTimeFormat = 'DD.MM.YYYY HH:mm'
 export const dateMonthYear = 'DD.MM.YYYY'
 export const yearMonthDate = 'YYYY-MM-DD'
+
+export const pixelToMM = (val: number) => {
+  const size = val * 264.58333 // value * 0.26458333(value of 1px in mm) * 1000
+  if (size < 352) return 353
+  else {
+    return size
+  }
+}

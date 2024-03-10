@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from '../../store/rootConfig'
 import { changeLanguage, langSelector } from '../../store/reducers/selects'
 import { Language } from '../../utils/types'
+import safiaLogo from '../../assets/images/safia-logo.png'
+import logoutImg from '../../assets/icons/logout.svg'
 
 const Header = () => {
   const { t } = useTranslation()
@@ -24,7 +26,7 @@ const Header = () => {
       <div className="flex justify-between items-center gap-16">
         <div className="flex items-center ml-4 gap-6 flex-1">
           <Link to={'/'} className="rounded-full h-[50px] w-[50px] ">
-            <img src="/images/safia-logo.png" alt="safia-logo" />
+            <img src={safiaLogo} alt="safia-logo" />
           </Link>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-1">
             <MainInput register={register('search')} placeholder={'search'} />
@@ -39,7 +41,7 @@ const Header = () => {
           </div>
         </div>
         <span className="mr-8 cursor-pointer flex">
-          <img src="/icons/logout.svg" alt="logout" className="h-7 w-7" />
+          <img src={logoutImg} alt="logout" className="h-7 w-7" />
         </span>
       </div>
     </Container>

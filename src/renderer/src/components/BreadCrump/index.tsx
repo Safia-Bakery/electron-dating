@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../store/rootConfig'
 import { logoutHandler } from '../../store/reducers/auth'
 import { changeLanguage, langSelector, sidebarHandler } from '../../store/reducers/selects'
 import { Language } from '../../utils/types'
+import burger from '../../assets/icons/burger.svg'
 
 interface Breadcrumb {
   path: string
@@ -99,7 +100,7 @@ const Breadcrumbs: FC = () => {
             onClick={() => dispatch(sidebarHandler(true))}
             className="btn btn-primary p-2 btn-fill btn-round btn-icon mr-3"
           >
-            <img width={22} className="flex" height={22} src="/icons/burger.svg" alt="burger" />
+            <img width={22} className="flex" height={22} src={burger} alt="burger" />
           </button>
           {window.location.pathname !== '/home' && (
             <li>

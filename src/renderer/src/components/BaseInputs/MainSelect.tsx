@@ -1,5 +1,4 @@
 import { ChangeEvent, FC, ReactNode } from 'react'
-import cl from 'classnames'
 import styles from './index.module.scss'
 import { UseFormRegisterReturn } from 'react-hook-form'
 
@@ -14,10 +13,17 @@ interface Props {
   onFocus?: () => void
 }
 
-const MainSelect: FC<Props> = ({ className, register, values, children, onFocus, ...others }) => {
+const MainSelect: FC<Props> = ({
+  className = '',
+  register,
+  values,
+  children,
+  onFocus,
+  ...others
+}) => {
   return (
     <select
-      className={cl(className, 'form-select form-control', styles.select, styles.inputBox)}
+      className={`${className} ${styles.inputBox}`}
       onFocus={onFocus}
       {...others}
       {...register}

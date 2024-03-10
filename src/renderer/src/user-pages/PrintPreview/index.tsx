@@ -1,34 +1,47 @@
-import { forwardRef, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
-import ReactToPrint from 'react-to-print'
-import dayjs from 'dayjs'
 import Container from '../../components/Container'
-import { dateTimeFormat } from '../../utils/helpers'
+import { useAppSelector } from '../../store/rootConfig'
+import { printerSelector } from '../../store/reducers/settings'
+import { useForm } from 'react-hook-form'
+import MainSelect from '../../components/BaseInputs/MainSelect'
+import usePrint from '../../hooks/custom/usePrint'
+import { useNavigate } from 'react-router-dom'
 
 const PrintPreview = () => {
   const { t } = useTranslation()
-  // const { checkid } = useParams()
-  const printComponentRef = useRef()
+  const navigate = useNavigate()
+  const { register, handleSubmit, getValues } = useForm()
 
   const [count, $count] = useState(1)
+  const printers = useAppSelector(printerSelector)
+  const { print } = usePrint()
 
-  const PrintComponent = forwardRef((_props: any, ref: any) => {
+  const handlePrint = () => {
+    print({
+      deviceName: getValues('selected_printer'),
+      silent: false,
+      copies: count,
+      footer: '',
+      header: ''
+    })
+  }
+
+  const handleBack = () => navigate(-1)
+
+  const printComponent = useMemo(() => {
     return (
-      <div
-        ref={ref}
-        id="printElement"
-        className="bg-white px-[3mm] rounded-[40px] flex flex-col w-[57mm] h-[47mm] pt-[7mm] absolute -left-52"
-      >
+      <div id="printElement" className="bg-white rounded-[40px] flex flex-col w-[60mm] h-[40mm] ">
         <h2 className="text-center text-l mb-[2mm]">apple</h2>
 
         <div className="flex justify-between items-center">
           <span className="text-[2mm] font-bold">{t('date_from')}</span>
-          <span className="text-[2mm] font-bold">{dayjs(new Date()).format(dateTimeFormat)}</span>
+          <span className="text-[2mm] font-bold">{new Date().toDateString()}</span>
         </div>
         <div className="flex justify-between items-center mt-[2mm]">
           <span className="text-[2mm] font-bold">{t('date_expire')}</span>
-          <span className="text-[2mm] font-bold">{dayjs(new Date()).format(dateTimeFormat)}</span>
+          <span className="text-[2mm] font-bold">{new Date().toDateString()}</span>
         </div>
 
         <div className="flex gap-2 items-center w-full mt-[5mm] justify-center">
@@ -43,8 +56,8 @@ const PrintPreview = () => {
         </div>
       </div>
     )
-  })
-  const PrintingCheck = useMemo(() => {
+  }, [])
+  const PrintingCheckPreview = useMemo(() => {
     return (
       <div className="bg-white px-4 py-3 rounded-[40px] pb-4 flex flex-col flex-[20]">
         <h2 className="text-center text-3xl mb-6">Банан</h2>
@@ -71,54 +84,65 @@ const PrintPreview = () => {
       </div>
     )
   }, [])
-
   const handleIncrement = () => $count((prev) => prev + 1)
   const handleDecrement = () => count > 1 && $count((prev) => prev - 1)
 
-  const renderLeft = useMemo(() => {
-    return <PrintComponent ref={printComponentRef} />
-  }, [])
-
   return (
-    <div className="absolute left-0 right-0 -translate-y-1/2 top-1/2 hide-on-print">
-      <Container className="bg-[#ECECEC] rounded-xl flex flex-1 max-h-[50vh] h-full min-h-[400px]">
+    <form
+      onSubmit={handleSubmit(handlePrint)}
+      className="absolute left-0 right-0 -translate-y-1/2 top-1/2 hide-on-print flex flex-col"
+    >
+      <Container className="bg-[#ECECEC] rounded-xl flex flex-1 max-h-[50vh] h-full min-h-[200px] relative">
+        <MainSelect
+          register={register('selected_printer')}
+          className="absolute top-2 right-2 !w-min"
+        >
+          {printers.map((printer) => (
+            <option key={printer.displayName + printer.name} value={printer.name}>
+              {printer.displayName} {printer.status}
+            </option>
+          ))}
+        </MainSelect>
         <div className="flex items-center justify-center gap-14 flex-1 max-h-[260px] m-auto max-w-2xl">
-          {renderLeft}
-          {PrintingCheck}
+          {printComponent}
+          {PrintingCheckPreview}
           <div className="py-10 !h-full px-8 flex flex-col justify-between bg-[#CCCCCC] rounded-[20px] items-center flex-1">
-            <button className="text-[50px] cursor-pointer leading-10" onClick={handleDecrement}>
+            <button
+              type="button"
+              className="text-[50px] cursor-pointer leading-10"
+              onClick={handleDecrement}
+            >
               -
             </button>
             <span className="text-[50px]">{count}</span>
-            <button className="text-[50px] cursor-pointer leading-10" onClick={handleIncrement}>
+            <button
+              type="button"
+              className="text-[50px] cursor-pointer leading-10"
+              onClick={handleIncrement}
+            >
               +
             </button>
           </div>
         </div>
       </Container>
 
-      <Container className="bg-[#F3F3F3] rounded-xl flex flex-[5] mt-5 gap-6 px-10">
-        <button className="bg-[#8CA0AF] rounded-3xl border-2 border-[#8CA0AF] flex flex-[2] text-white justify-center py-4 text-3xl">
+      <Container className="bg-[#F3F3F3] rounded-xl flex flex-[5] !mt-5 gap-6 px-10">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="bg-[#8CA0AF] rounded-3xl border-2 border-[#8CA0AF] flex flex-[2] text-white justify-center py-4 text-3xl"
+        >
           {t('back')}
         </button>
 
-        {/* <button
-          onClick={handlePrint}
+        <button
+          type="submit"
           className="bg-primary rounded-3xl border-2 border-[#797EFF] flex flex-[2] text-white justify-center py-4 text-3xl"
         >
-          {t("print")}
-        </button> */}
-
-        <ReactToPrint
-          trigger={() => (
-            <button className="bg-primary rounded-3xl border-2 border-[#797EFF] flex flex-[2] text-white justify-center py-4 text-3xl">
-              {t('print')}
-            </button>
-          )}
-          content={() => printComponentRef.current || null}
-        />
+          {t('print')}
+        </button>
       </Container>
-    </div>
+    </form>
   )
 }
 

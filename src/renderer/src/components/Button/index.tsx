@@ -6,7 +6,8 @@ type Props = {
   green?: boolean
   className: string
   children: ReactNode
-  onClick: () => void
+  onClick?: () => void
+  type?: 'reset' | 'submit' | 'button' | undefined
 }
 
 const Button = ({ green, children, className = '', ...others }: Props) => {

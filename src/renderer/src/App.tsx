@@ -1,10 +1,12 @@
 import { lazy, useEffect } from 'react'
 import i18n from './localization'
-import { useAppSelector } from './store/rootConfig'
+import { useAppDispatch, useAppSelector } from './store/rootConfig'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 // import Suspend from 'components/Suspend'
 import { langSelector } from './store/reducers/selects'
 import Suspend from './components/Suspend'
+import { getPrinters } from './store/reducers/settings'
+import { PrinterInfo } from 'electron'
 
 const Login = lazy(() => import('./user-pages/Login'))
 const Dishes = lazy(() => import('./admin-pages/Dishes'))
@@ -16,6 +18,7 @@ const PrintPreview = lazy(() => import('./user-pages/PrintPreview'))
 const App = () => {
   const lang = useAppSelector(langSelector)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   // useEffect(() => {
   //   if (!token) navigate("/login");
@@ -29,6 +32,17 @@ const App = () => {
   useEffect(() => {
     i18n.changeLanguage(lang)
   }, [lang])
+
+  useEffect(() => {
+    const listener = window?.contextBridge?.on('get-printers', (printers: PrinterInfo[]) => {
+      console.log(printers, 'printers')
+      dispatch(getPrinters(printers))
+    })
+
+    window.contextBridge?.getPrinters()
+
+    return listener
+  }, [])
 
   return (
     <Routes>

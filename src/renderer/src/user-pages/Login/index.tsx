@@ -9,6 +9,7 @@ import { successToast } from '../../utils/toast'
 import BaseInput from '../../components/BaseInputs'
 import MainInput from '../../components/BaseInputs/MainInput'
 import Loading from '../../components/Loader'
+import safiaimg from '../../assets/images/safia-img.png'
 
 const Login = () => {
   const { t } = useTranslation()
@@ -53,7 +54,7 @@ const Login = () => {
     <div className="h-screen flex flex-1 w-screen">
       <div className="flex flex-[4] items-center justify-center bg-lightBrown">
         <img
-          src="/images/safia-img.png"
+          src={safiaimg}
           className="max-h-[21vh] max-w-[12vw] h-full w-full object-contain"
           alt="safia-logo"
         />
