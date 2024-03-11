@@ -1,20 +1,22 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, WebContentsPrintOptions } from 'electron'
 import { join } from 'node:path'
+// import icon from '../../resources/icon.png'
 
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
-    fullscreenable: true,
-    simpleFullscreen: true,
+    // fullscreenable: true,
+    // simpleFullscreen: true,
+    // icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true
     }
   })
-  mainWindow.maximize()
-  mainWindow.webContents.openDevTools()
+  // mainWindow.maximize()
+  // mainWindow.webContents.openDevTools()
 
   ipcMain.on('get-printers', async (event: IpcMainEvent) => {
     const printers = await mainWindow.webContents.getPrintersAsync()
@@ -24,9 +26,7 @@ const createWindow = (): void => {
   ipcMain.on('ipc-print', async (_, options: WebContentsPrintOptions) => {
     mainWindow.webContents.print(
       {
-        ...options,
-        printBackground: false,
-        collate: true
+        ...options
       },
       (isSuccess, error) => {
         if (!isSuccess && error) alert(error)

@@ -8,13 +8,7 @@ const usePrint = () => {
     if (!options.deviceName) return warnToast('Устройство не выбрано!!!')
 
     try {
-      return window.contextBridge.print({
-        ...options,
-        pageSize: { height: 40000, width: 60000 },
-        landscape: false,
-        silent: false,
-        margins: { marginType: 'none' }
-      })
+      return window.contextBridge.print(options)
     } catch (error: any) {
       errorToast(error?.message)
     }

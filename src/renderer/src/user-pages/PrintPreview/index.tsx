@@ -25,13 +25,8 @@ const PrintPreview = () => {
       silent: true,
       copies: count,
       margins: { top: 0, left: 0, right: 0, bottom: 0 },
-      pageSize: { width: 48000, height: 48000 },
-      landscape: false,
-      pagesPerSheet: 1,
-      scaleFactor: 2,
-      printBackground: true,
-      duplexMode: 'shortEdge',
-      collate: true
+      // pageSize: { width: 48000, height: 48000 },
+      pageSize: 'A6'
     })
   }
 
