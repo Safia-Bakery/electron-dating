@@ -2,19 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-#printElement {
+/* #printElement {
   position: absolute;
   left: -1000px;
   top: -1000px;
+} */
+
+#printElement {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: black;
 }
 
 @media print {
   body * {
     visibility: hidden;
   }
+  body {
+    height: 60mm !important;
+    width: 40mm !important;
+  }
   #printElement,
   #printElement * {
     visibility: visible;
+    display: flex;
   }
 
   #printElement {

@@ -10,6 +10,7 @@
     "composite": true,
     "jsx": "react-jsx",
     "baseUrl": "./",
+    "outDir": "./",
     "paths": {
       // "@renderer/*": ["src/renderer/src/*"]
       // "custom/*": ["src/renderer/src/hooks/custom/*"],

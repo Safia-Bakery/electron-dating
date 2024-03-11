@@ -1,3 +1,4 @@
+import React from 'react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
@@ -21,10 +22,16 @@ const PrintPreview = () => {
   const handlePrint = () => {
     print({
       deviceName: getValues('selected_printer'),
-      silent: false,
+      silent: true,
       copies: count,
-      footer: '',
-      header: ''
+      margins: { top: 0, left: 0, right: 0, bottom: 0 },
+      pageSize: { width: 48000, height: 48000 },
+      landscape: false,
+      pagesPerSheet: 1,
+      scaleFactor: 2,
+      printBackground: true,
+      duplexMode: 'shortEdge',
+      collate: true
     })
   }
 
@@ -32,12 +39,15 @@ const PrintPreview = () => {
 
   const printComponent = useMemo(() => {
     return (
-      <div id="printElement" className="bg-white rounded-[40px] flex flex-col w-[60mm] h-[40mm] ">
+      <div
+        id="printElement"
+        className="bg-white rounded-[40px] flex flex-col p-2 w-[60mm] h-[40mm]"
+      >
         <h2 className="text-center text-l mb-[2mm]">apple</h2>
 
         <div className="flex justify-between items-center">
-          <span className="text-[2mm] font-bold">{t('date_from')}</span>
-          <span className="text-[2mm] font-bold">{new Date().toDateString()}</span>
+          <span className="text-[2mm] leading-1 font-bold">{t('date_from')}</span>
+          <span className="text-[2mm] leading-1 font-bold">{new Date().toDateString()}</span>
         </div>
         <div className="flex justify-between items-center mt-[2mm]">
           <span className="text-[2mm] font-bold">{t('date_expire')}</span>
@@ -88,61 +98,63 @@ const PrintPreview = () => {
   const handleDecrement = () => count > 1 && $count((prev) => prev - 1)
 
   return (
-    <form
-      onSubmit={handleSubmit(handlePrint)}
-      className="absolute left-0 right-0 -translate-y-1/2 top-1/2 hide-on-print flex flex-col"
-    >
-      <Container className="bg-[#ECECEC] rounded-xl flex flex-1 max-h-[50vh] h-full min-h-[200px] relative">
-        <MainSelect
-          register={register('selected_printer')}
-          className="absolute top-2 right-2 !w-min"
-        >
-          {printers.map((printer) => (
-            <option key={printer.displayName + printer.name} value={printer.name}>
-              {printer.displayName} {printer.status}
-            </option>
-          ))}
-        </MainSelect>
-        <div className="flex items-center justify-center gap-14 flex-1 max-h-[260px] m-auto max-w-2xl">
-          {printComponent}
-          {PrintingCheckPreview}
-          <div className="py-10 !h-full px-8 flex flex-col justify-between bg-[#CCCCCC] rounded-[20px] items-center flex-1">
-            <button
-              type="button"
-              className="text-[50px] cursor-pointer leading-10"
-              onClick={handleDecrement}
-            >
-              -
-            </button>
-            <span className="text-[50px]">{count}</span>
-            <button
-              type="button"
-              className="text-[50px] cursor-pointer leading-10"
-              onClick={handleIncrement}
-            >
-              +
-            </button>
+    <>
+      {printComponent}
+      <form
+        onSubmit={handleSubmit(handlePrint)}
+        className="absolute left-0 right-0 -translate-y-1/2 top-1/2 flex flex-col"
+      >
+        <Container className="bg-[#ECECEC] rounded-xl flex flex-1 max-h-[50vh] h-full min-h-[200px] relative">
+          <MainSelect
+            register={register('selected_printer')}
+            className="absolute top-2 right-2 !w-min"
+          >
+            {printers.map((printer) => (
+              <option key={printer.displayName + printer.name} value={printer.name}>
+                {printer.displayName} {printer.status}
+              </option>
+            ))}
+          </MainSelect>
+          <div className="flex items-center justify-center gap-14 flex-1 max-h-[260px] m-auto max-w-2xl">
+            {PrintingCheckPreview}
+            <div className="py-10 !h-full px-8 flex flex-col justify-between bg-[#CCCCCC] rounded-[20px] items-center flex-1">
+              <button
+                type="button"
+                className="text-[50px] cursor-pointer leading-10"
+                onClick={handleDecrement}
+              >
+                -
+              </button>
+              <span className="text-[50px]">{count}</span>
+              <button
+                type="button"
+                className="text-[50px] cursor-pointer leading-10"
+                onClick={handleIncrement}
+              >
+                +
+              </button>
+            </div>
           </div>
-        </div>
-      </Container>
+        </Container>
 
-      <Container className="bg-[#F3F3F3] rounded-xl flex flex-[5] !mt-5 gap-6 px-10">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="bg-[#8CA0AF] rounded-3xl border-2 border-[#8CA0AF] flex flex-[2] text-white justify-center py-4 text-3xl"
-        >
-          {t('back')}
-        </button>
+        <Container className="bg-[#F3F3F3] rounded-xl flex flex-[5] !mt-5 gap-6 px-10">
+          <button
+            type="button"
+            onClick={handleBack}
+            className="bg-[#8CA0AF] rounded-3xl border-2 border-[#8CA0AF] flex flex-[2] text-white justify-center py-4 text-3xl"
+          >
+            {t('back')}
+          </button>
 
-        <button
-          type="submit"
-          className="bg-primary rounded-3xl border-2 border-[#797EFF] flex flex-[2] text-white justify-center py-4 text-3xl"
-        >
-          {t('print')}
-        </button>
-      </Container>
-    </form>
+          <button
+            type="submit"
+            className="bg-primary rounded-3xl border-2 border-[#797EFF] flex flex-[2] text-white justify-center py-4 text-3xl"
+          >
+            {t('print')}
+          </button>
+        </Container>
+      </form>
+    </>
   )
 }
 
