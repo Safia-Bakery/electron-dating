@@ -19,8 +19,7 @@
     visibility: hidden;
   }
   body {
-    height: 60mm !important;
-    width: 40mm !important;
+    height: 20% !important;
   }
   #printElement,
   #printElement * {

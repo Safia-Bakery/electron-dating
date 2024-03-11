@@ -25,8 +25,7 @@ const PrintPreview = () => {
       silent: true,
       copies: count,
       margins: { top: 0, left: 0, right: 0, bottom: 0 },
-      // pageSize: { width: 48000, height: 48000 },
-      pageSize: 'A6'
+      pageSize: { width: 4800, height: 4800 }
     })
   }
 
