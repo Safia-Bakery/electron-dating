@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* #printElement {
+#printElement {
   position: absolute;
   left: -1000px;
   top: -1000px;
-} */
+}
 
 @media print {
   body * {
