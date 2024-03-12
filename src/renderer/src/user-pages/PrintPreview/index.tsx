@@ -1,4 +1,3 @@
-import React from 'react'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-qr-code'
@@ -22,10 +21,20 @@ const PrintPreview = () => {
   const handlePrint = () => {
     print({
       deviceName: getValues('selected_printer'),
-      silent: true,
+      silent: false,
       copies: count,
-      margins: { top: 0, left: 0, right: 0, bottom: 0 },
-      pageSize: { width: 4800, height: 4800 }
+      printBackground: true,
+      color: false,
+      margins: { marginType: 'printableArea' },
+      pageSize: {
+        height: Number(document.getElementById('printElement')?.clientHeight) * 100,
+        width: Number(document.getElementById('printElement')?.clientWidth) * 100
+      },
+      landscape: false,
+      pagesPerSheet: 1,
+      collate: false,
+      header: 'Header of the Page',
+      footer: 'Footer of the Page'
     })
   }
 
@@ -34,7 +43,7 @@ const PrintPreview = () => {
   const printComponent = useMemo(() => {
     return (
       <div
-        id="printElement"
+        // id="printElement"
         className="bg-white rounded-[40px] flex flex-col p-2 w-[60mm] h-[40mm]"
       >
         <h2 className="text-center text-l mb-[2mm]">apple</h2>
@@ -63,7 +72,10 @@ const PrintPreview = () => {
   }, [])
   const PrintingCheckPreview = useMemo(() => {
     return (
-      <div className="bg-white px-4 py-3 rounded-[40px] pb-4 flex flex-col flex-[20]">
+      <div
+        id="printElement"
+        className="bg-white px-4 py-3 rounded-[40px] pb-4 flex flex-col flex-[20] "
+      >
         <h2 className="text-center text-3xl mb-6">Банан</h2>
 
         <div className="flex justify-between items-center">
@@ -96,13 +108,10 @@ const PrintPreview = () => {
       {printComponent}
       <form
         onSubmit={handleSubmit(handlePrint)}
-        className="absolute left-0 right-0 -translate-y-1/2 top-1/2 flex flex-col"
+        className="left-0 right-0 -translate-y-1/2 top-1/2 flex flex-col"
       >
         <Container className="bg-[#ECECEC] rounded-xl flex flex-1 max-h-[50vh] h-full min-h-[200px] relative">
-          <MainSelect
-            register={register('selected_printer')}
-            className="absolute top-2 right-2 !w-min"
-          >
+          <MainSelect register={register('selected_printer')} className=" top-2 right-2 !w-min">
             {printers.map((printer) => (
               <option key={printer.displayName + printer.name} value={printer.name}>
                 {printer.displayName} {printer.status}
