@@ -6,7 +6,8 @@ interface State {
 }
 
 const initialState: State = {
-  token: null
+  token:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTAzMDcxNDIsInN1YiI6Im1haW5fYWRtaW4ifQ.CmA8sRElEFLbohU8KROwq3IrprFDNBfyq3Kaim5TjWY'
 }
 
 export const authReducer = createSlice({

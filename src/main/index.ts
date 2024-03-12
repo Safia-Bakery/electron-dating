@@ -34,30 +34,6 @@ const createWindow = (): void => {
     )
   })
 
-  // ipcMain.on('print-selected', (event, selectedContent) => {
-  //   mainWindow.webContents.printToPDF(
-  //     {
-  //       printBackground: true,
-  //       pageSize: 'A4',
-  //       marginsType: 1,
-  //       landscape: false,
-  //       scaleFactor: 1,
-  //       printSelectionOnly: true, // Set this to true to print only the selected content
-  //       pageRanges: '1' // Specify the page range you want to print (e.g., '1-3' for pages 1 to 3)
-  //     },
-  //     (error: any, data: any) => {
-  //       if (error) throw error
-
-  //       // Save the PDF to a file or send it to the printer
-  //       fs.writeFile('selected_content.pdf', data, (err: any) => {
-  //         if (err) throw err
-  //         console.log('PDF saved successfully')
-  //       })
-  //     }
-  //   )
-  // })
-
-  // and load the index.html of the app.
   if (process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {

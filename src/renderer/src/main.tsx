@@ -12,7 +12,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './assets/main.css'
 
-export const baseURL = 'https://api.service.safiabakery.uz' // todo
+export const baseURL = 'http://localhost:8000' // todo
 export default new BaseAPIClient(baseURL, store)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

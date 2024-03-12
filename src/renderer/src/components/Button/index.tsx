@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 type Props = {
   green?: boolean
-  className: string
+  className?: string
   children: ReactNode
   onClick?: () => void
   type?: 'reset' | 'submit' | 'button' | undefined
