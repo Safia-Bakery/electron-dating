@@ -25,7 +25,8 @@ const localization = {
       type: 'Тип',
       sync_date: 'Дата синх.',
       add: 'Добавить',
-      dating: 'Датировка'
+      dating: 'Датировка',
+      sync_with_iico: 'Синхронизировать с iiko'
     }
   },
   uz: {

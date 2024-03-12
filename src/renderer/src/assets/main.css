@@ -2,17 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* #printElement {
+#printElement {
   position: absolute;
   left: -1000px;
   top: -1000px;
-} */
+}
 
-#printElement {
+/* #printElement {
   position: absolute;
   left: 0;
   top: 0;
-}
+} */
 
 @media print {
   body * {

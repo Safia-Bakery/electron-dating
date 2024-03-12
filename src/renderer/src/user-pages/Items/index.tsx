@@ -162,15 +162,15 @@ const Items = () => {
   const handleSync = () => sync()
 
   return (
-    <>
-      <Button green onClick={handleSync}>
-        sync
+    <div className="w-full flex flex-col mt-4">
+      <Button green onClick={handleSync} className="flex self-end mr-6">
+        {t('sync_with_iico')}
       </Button>
       <Container className="flex gap-4 mt-5 max-h-[75vh] h-full min-h-[700px] pb-7 ">
         <div className="flex flex-col bg-[#FFF3E8] p-4 border border-[#C7C2B1] rounded-xl flex-1 max-w-44 overflow-y-hidden">
           <h3 className="text-center font-bold">{t('categories')}</h3>
 
-          <div className="flex flex-col gap-4 mt-6 h-full overflow-y-auto">
+          <div className="flex flex-col gap-4 mt-6 h-full overflow-y-auto w-min">
             {prods?.groups.map((group) => (
               <Link
                 to={`/users/items/${group.id}`}
@@ -188,20 +188,21 @@ const Items = () => {
         <div className="bg-[#FBFBF8] rounded-xl border p-3 border-[#F0E3C9] flex-1 overflow-y-scroll">
           <h3 className="font-bold">{t('raw_materials')}</h3>
           <div className="w-full my-3 gap-4 flex-wrap px-6 grid grid-cols-4 overflow-y-auto">
-            {prods?.products.map((prod, idx) => (
-              <Link
-                to={`${id}/${prod.id}`}
-                className="border border-[#F5E7C7] bg-white font-bold rounded-2xl w-full h-24 flex items-center justify-center flex-1 min-w-[200px] cursor-pointer p-2 text-center"
-                key={idx}
-              >
-                {prod.name}
-              </Link>
-            ))}
+            {!!id &&
+              prods?.products.map((prod, idx) => (
+                <Link
+                  to={`${id}/${prod.id}`}
+                  className="border border-[#F5E7C7] bg-white font-bold rounded-2xl w-full h-24 flex items-center justify-center flex-1 min-w-[200px] cursor-pointer p-2 text-center"
+                  key={idx}
+                >
+                  {prod.name}
+                </Link>
+              ))}
           </div>
         </div>
         {(syncFetching || productFetching || productLoading) && <Loading absolute />}
       </Container>
-    </>
+    </div>
   )
 }
 

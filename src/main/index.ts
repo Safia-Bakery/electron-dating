@@ -7,15 +7,15 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
-    // fullscreenable: true,
-    // simpleFullscreen: true,
+    fullscreenable: true,
+    simpleFullscreen: true,
     // icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true
     }
   })
-  // mainWindow.maximize()
+  mainWindow.maximize()
   // mainWindow.webContents.openDevTools()
 
   ipcMain.on('get-printers', async (event: IpcMainEvent) => {
