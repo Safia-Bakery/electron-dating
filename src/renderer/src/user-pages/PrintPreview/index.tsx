@@ -74,24 +74,24 @@ const PrintPreview = () => {
     return (
       <div
         id="printElement"
-        className="bg-white px-4 py-3 rounded-[40px] pb-4 flex flex-col flex-[20] "
+        className="bg-white px-4 py-3 rounded-[40px] pb-4 flex flex-col flex-[20] h-[205px] w-[300px] justify-center items-center "
       >
-        <h2 className="text-center text-3xl mb-6">Банан</h2>
+        <h2 className="mx-auto text-m font-bold mb-1">Банан lallala</h2>
 
-        <div className="flex justify-between items-center">
-          <span className="text-xl">{t('date_from')}</span>
-          <span className="text-3xl">22.02.2024 12:00</span>
+        <div className="flex justify-center items-center gap-2">
+          <span className="text-xs">{t('date_from')}</span>
+          <span className="text-xs">26.02.2024 12:00</span>
         </div>
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-xl">{t('date_expire')}</span>
-          <span className="text-3xl">27.02.2024 12:00</span>
+        <div className="flex items-center mt-2 justify-center gap-2">
+          <span className="text-xs">{t('date_expire')}</span>
+          <span className="text-xs">28.02.2024 12:00</span>
         </div>
 
-        <div className="flex gap-2 items-center w-full mt-5 justify-center">
-          <div className="w-16 h-16">
-            <QRCode value="fu*k" size={60} />
+        <div className="flex gap-2 items-center w-full mt-2 justify-center">
+          <div className="w-12 h-12">
+            <QRCode value="fu*k" size={48} />
           </div>
-          <p className="text-[8px] max-w-[260px]">
+          <p className="text-[7px] max-w-[120px]">
             Хранить при температуре от +5°C до +25°C. Избегать прямого солнечного света. Соблюдать
             срок годности. Хранить в сухом месте. При необходимости, хранить в оригинальной
             упаковке.
@@ -105,13 +105,13 @@ const PrintPreview = () => {
 
   return (
     <>
-      {printComponent}
+      {/* {printComponent} */}
       <form
         onSubmit={handleSubmit(handlePrint)}
-        className="left-0 right-0 -translate-y-1/2 top-1/2 flex flex-col"
+        // className="left-0 right-0 bottom-0 -translate-y-1/2 top-1/2 flex flex-col"
       >
         <Container className="bg-[#ECECEC] rounded-xl flex flex-1 max-h-[50vh] h-full min-h-[200px] relative">
-          <MainSelect register={register('selected_printer')} className=" top-2 right-2 !w-min">
+          <MainSelect register={register('selected_printer')} className="absolute top-2 right-2 !w-min">
             {printers.map((printer) => (
               <option key={printer.displayName + printer.name} value={printer.name}>
                 {printer.displayName} {printer.status}
