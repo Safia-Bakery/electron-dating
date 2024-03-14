@@ -25,7 +25,13 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('ipc-print', async (_, options: WebContentsPrintOptions) => {
-    PythonShell.run('my_script.py').then((messages) => {
+    const pyoptions = {
+      mode: 'text',
+      pythonPath: 'python3', // Path to your Python interpreter
+      pythonOptions: ['-u'], // unbuffered stdout
+      args: JSON.stringify(options) // Pass parameters as arguments
+    }
+    PythonShell.run('./src/main/print.py', pyoptions).then((messages) => {
       // results is an array consisting of messages collected during execution
       console.log('results: %j')
     })

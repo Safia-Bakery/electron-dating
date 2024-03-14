@@ -1,4 +1,10 @@
 import win32print
+import sys
+
+# Receive parameters passed from JavaScript
+params = sys.argv[1:]
+
+print("Received parameters from JavaScript:", params)
 
 # Your ZPL code 
 zpl_code = """
