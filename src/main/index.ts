@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, WebContentsPrintOptions } from 'electron'
 import { join } from 'node:path'
+import { PythonShell } from 'python-shell'
 // import icon from '../../resources/icon.png'
 
 const createWindow = (): void => {
@@ -24,14 +25,18 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('ipc-print', async (_, options: WebContentsPrintOptions) => {
-    mainWindow.webContents.print(
-      {
-        ...options
-      },
-      (isSuccess, error) => {
-        if (!isSuccess && error) alert(error)
-      }
-    )
+    PythonShell.run('my_script.py').then((messages) => {
+      // results is an array consisting of messages collected during execution
+      console.log('results: %j')
+    })
+    // mainWindow.webContents.print(
+    //   {
+    //     ...options
+    //   },
+    //   (isSuccess, error) => {
+    //     if (!isSuccess && error) alert(error)
+    //   }
+    // )
   })
 
   if (process.env['ELECTRON_RENDERER_URL']) {
