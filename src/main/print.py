@@ -1,13 +1,7 @@
-import sys
-import json
+
 import win32print
 
-# Retrieve parameters passed from JavaScript
-options = json.loads(sys.argv[1])
-
-# Extract device name and number of copies from options
-device_name = options.get('deviceName')
-num_copies = options.get('copies', 1)  # Default to 1 copy if not provided
+# Retrieve parameters passed from JavaScriptDefault to 1 copy if not provided
 
 # Modify the ZPL code to include device name
 zpl_code = f"""
@@ -18,7 +12,7 @@ zpl_code = f"""
 ^LS0 
 ^FO50,20  // Moved the starting position down to 150 dots
 ^A0N,50,50  // Increased font size to 60 dots
-^FDProduct {device_name}^FS 
+^FDProduct ^FS 
 ^FO80,30  // Moved down to 250 dots
 ^BQN,2,9  // QR code command. Format 2 specifies QR code, and the data is encoded as ASCII
 ^FDMM,AWhats up mother fuckers^FS  // MM: Mode - A: Alphanumeric. You can adjust the mode based on your data type.
@@ -35,7 +29,7 @@ print("Received parameters from JavaScript:", options)
 # Open the printer
 hPrinter = win32print.OpenPrinter(printer_name) 
 try:
-    for _ in range(num_copies):
+    for _ in range(5): # this number can be changed
         # Start a print job
         hJob = win32print.StartDocPrinter(hPrinter, 1, (f"ZPL Label - Copy{_+1}", None, "RAW"))
         try:

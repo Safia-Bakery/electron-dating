@@ -1,8 +1,7 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, WebContentsPrintOptions } from 'electron'
 import path, { join } from 'node:path'
-const sys = require('util')
-const json = require('json')
-const win32print = require('win32print')
+import { exec } from 'child_process'
+import { promisify } from 'util'
 
 // import icon from '../../resources/icon.png'
 import { spawn } from 'child_process'
@@ -30,6 +29,27 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('ipc-print', async (_, options: WebContentsPrintOptions) => {
+    const execAsync = promisify(exec)
+
+    async function printZPL(printerName, zplCode, numCopies) {
+      try {
+        // Open the printer
+        const openCommand = `rundll32.exe PRINTUI.DLL,PrintUIEntry /y /n "${printerName}"`
+        await execAsync(openCommand)
+
+        // Start print jobs
+        for (let i = 0; i < numCopies; i++) {
+          const jobName = `ZPL Label - Copy ${i + 1}`
+          const startJobCommand = `CMD /C echo ${zplCode} | powershell -Command "& { Out-Printer -Name '${printerName}' }"`
+          await execAsync(startJobCommand)
+        }
+
+        console.log('Print job completed successfully.')
+      } catch (error) {
+        console.error('Error occurred while printing:', error)
+      }
+    }
+
     // Modify the ZPL code to include device name
     const zplCode = `
 ^XA 
@@ -39,7 +59,7 @@ const createWindow = (): void => {
 ^LS0 
 ^FO50,20  // Moved the starting position down to 150 dots
 ^A0N,50,50  // Increased font size to 60 dots
-^FDProduct^FS 
+^FDProduct ^FS 
 ^FO80,30  // Moved down to 250 dots
 ^BQN,2,9  // QR code command. Format 2 specifies QR code, and the data is encoded as ASCII
 ^FDMM,AWhats up mother fuckers^FS  // MM: Mode - A: Alphanumeric. You can adjust the mode based on your data type.
@@ -52,32 +72,10 @@ const createWindow = (): void => {
     // Get your Godex printer's EXACT name from Windows settings
     const printerName = 'Godex G530' // Replace with the actual name
 
-    console.log('Received parameters from JavaScript:', options)
+    // Number of copies to print
+    const numCopies = 5
 
-    // Open the printer
-    const hPrinter = win32print.OpenPrinter(printerName)
-    try {
-      for (let i = 0; i < 2; i++) {
-        // Start a print job
-        const hJob = win32print.StartDocPrinter(hPrinter, 1, [
-          `ZPL Label - Copy${i + 1}`,
-          null,
-          'RAW'
-        ])
-        try {
-          win32print.StartPagePrinter(hPrinter)
-          // Write ZPL code to the printer
-          win32print.WritePrinter(hPrinter, Buffer.from(zplCode))
-          win32print.EndPagePrinter(hPrinter)
-        } finally {
-          // End the print job
-          win32print.EndDocPrinter(hPrinter)
-        }
-      }
-    } finally {
-      // Close the printer
-      win32print.ClosePrinter(hPrinter)
-    }
+    printZPL(printerName, zplCode, numCopies)
   })
 
   if (process.env['ELECTRON_RENDERER_URL']) {
