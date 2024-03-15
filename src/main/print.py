@@ -1,13 +1,13 @@
-import win32print
 import sys
 import json
+import win32print
 
 # Retrieve parameters passed from JavaScript
 options = json.loads(sys.argv[1])
 
-# Extract device name from options
+# Extract device name and number of copies from options
 device_name = options.get('deviceName')
-copies = options.get('copies')
+num_copies = options.get('copies', 1)  # Default to 1 copy if not provided
 
 # Modify the ZPL code to include device name
 zpl_code = f"""
@@ -35,25 +35,26 @@ print("Received parameters from JavaScript:", )
 # Open the printer
 hPrinter = win32print.OpenPrinter(printer_name) 
 try:
-    # Start a print job
-    hJob = win32print.StartDocPrinter(hPrinter, copies, ("ZPL Label", None, "RAW"))
-    try:
-        win32print.StartPagePrinter(hPrinter)
-        # Write ZPL code to the printer
-        win32print.WritePrinter(hPrinter, zpl_code.encode())
-        win32print.EndPagePrinter(hPrinter)
-        
-        # Additional steps to attempt to resolve the issue
-        
-        # Reset printer
-        win32print.SetPrinter(hPrinter, 2, None, 0)
-        
-        # Calibrate printer (if applicable)
-        # Instructions for calibration may vary depending on the printer model
-        
-    finally:
-        # End the print job
-        win32print.EndDocPrinter(hPrinter)
+    for _ in range(num_copies):  # Loop to print multiple copies
+        # Start a print job
+        hJob = win32print.StartDocPrinter(hPrinter, 1, ("ZPL Label", None, "RAW"))
+        try:
+            win32print.StartPagePrinter(hPrinter)
+            # Write ZPL code to the printer
+            win32print.WritePrinter(hPrinter, zpl_code.encode())
+            win32print.EndPagePrinter(hPrinter)
+            
+            # Additional steps to attempt to resolve the issue
+            
+            # Reset printer
+            win32print.SetPrinter(hPrinter, 2, None, 0)
+            
+            # Calibrate printer (if applicable)
+            # Instructions for calibration may vary depending on the printer model
+            
+        finally:
+            # End the print job
+            win32print.EndDocPrinter(hPrinter)
 finally:
     # Close the printer
     win32print.ClosePrinter(hPrinter)

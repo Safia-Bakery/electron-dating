@@ -32,7 +32,7 @@ const createWindow = (): void => {
       args: [JSON.stringify(options)] // Pass parameters as arguments
     }
     // PythonShell.runString(
-
+    console.log(options, 'optionss')
     // ).then((messages) => {
     PythonShell.run('./src/main/print.py', pyoptions).then((messages) => {
       // results is an array consisting of messages collected during execution
