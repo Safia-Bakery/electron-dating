@@ -1,10 +1,8 @@
 import win32print
-import sys
 
 # Receive parameters passed from JavaScript
-params = sys.argv[1:]
 
-print("Received parameters from JavaScript:", params)
+print('hi')
 
 # Your ZPL code 
 zpl_code = """
@@ -28,8 +26,9 @@ zpl_code = """
 # Get your Godex printer's EXACT name from Windows settings
 printer_name = "Godex G530"  # Replace with the actual name
 
+print("Received parameters from JavaScript:", )   
 # Open the printer
-hPrinter = win32print.OpenPrinter(printer_name)
+hPrinter = win32print.OpenPrinter(printer_name) 
 try:
     # Start a print job
     hJob = win32print.StartDocPrinter(hPrinter, 1, ("ZPL Label", None, "RAW"))
