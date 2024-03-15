@@ -1,5 +1,9 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, WebContentsPrintOptions } from 'electron'
 import path, { join } from 'node:path'
+const sys = require('util')
+const json = require('json')
+const win32print = require('win32print')
+
 // import icon from '../../resources/icon.png'
 import { spawn } from 'child_process'
 import fs from 'fs'
@@ -26,50 +30,54 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('ipc-print', async (_, options: WebContentsPrintOptions) => {
-    // Extract device name and other necessary parameters from options
-    const deviceName = options.deviceName
-    const numCopies = options.copies || 1 // Default to 1 copy if not provided
-
-    // Modify the ZPL code with device name and other parameters
+    // Modify the ZPL code to include device name
     const zplCode = `
-    ^XA 
-    ^MMT
-    ^PW400
-    ^LL800
-    ^LS0 
-    ^FO50,20
-    ^A0N,50,50
-    ^FDProduct ${deviceName}^FS 
-    ^FO80,30
-    ^BQN,2,9
-    ^FDMM,AWhats up mother fuckers^FS
-    ^FO50,250
-    ^A0N,35,35
-    ^FDPrice: $19.99^FS 
-    ^XZ
-  `
+^XA 
+^MMT
+^PW400
+^LL800  // Increased label length to 800 dots
+^LS0 
+^FO50,20  // Moved the starting position down to 150 dots
+^A0N,50,50  // Increased font size to 60 dots
+^FDProduct^FS 
+^FO80,30  // Moved down to 250 dots
+^BQN,2,9  // QR code command. Format 2 specifies QR code, and the data is encoded as ASCII
+^FDMM,AWhats up mother fuckers^FS  // MM: Mode - A: Alphanumeric. You can adjust the mode based on your data type.
+^FO50,250  // Moved down to 450 dots
+^A0N,35,35  // Increased font size to 40 dots
+^FDPrice: $19.99^FS 
+^XZ
+`
 
-    // Create a temporary file to hold the ZPL code
-    const tempFile = path.join(__dirname, 'temp_zpl_code.zpl')
-    fs.writeFileSync(tempFile, zplCode)
+    // Get your Godex printer's EXACT name from Windows settings
+    const printerName = 'Godex G530' // Replace with the actual name
 
-    // Use subprocess to execute PowerShell command to print
-    const powershell = spawn('powershell', [
-      '-Command',
-      `Start-Process -FilePath "${tempFile}" -Verb Print -PassThru | %{sleep 10;$_} | Stop-Process -Force`
-    ])
+    console.log('Received parameters from JavaScript:', options)
 
-    powershell.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`)
-    })
-
-    powershell.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`)
-    })
-
-    powershell.on('close', (code) => {
-      console.log(`child process exited with code ${code}`)
-    })
+    // Open the printer
+    const hPrinter = win32print.OpenPrinter(printerName)
+    try {
+      for (let i = 0; i < 2; i++) {
+        // Start a print job
+        const hJob = win32print.StartDocPrinter(hPrinter, 1, [
+          `ZPL Label - Copy${i + 1}`,
+          null,
+          'RAW'
+        ])
+        try {
+          win32print.StartPagePrinter(hPrinter)
+          // Write ZPL code to the printer
+          win32print.WritePrinter(hPrinter, Buffer.from(zplCode))
+          win32print.EndPagePrinter(hPrinter)
+        } finally {
+          // End the print job
+          win32print.EndDocPrinter(hPrinter)
+        }
+      }
+    } finally {
+      // Close the printer
+      win32print.ClosePrinter(hPrinter)
+    }
   })
 
   if (process.env['ELECTRON_RENDERER_URL']) {
