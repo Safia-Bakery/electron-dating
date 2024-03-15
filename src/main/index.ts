@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, IpcMainEvent, Menu, WebContentsPrintOptions } from 'electron'
-import { join } from 'node:path'
+import path, { join } from 'node:path'
 import { Options, PythonShell } from 'python-shell'
 // import icon from '../../resources/icon.png'
 
@@ -31,10 +31,10 @@ const createWindow = (): void => {
       pythonOptions: ['-u'], // unbuffered stdout
       args: [JSON.stringify(options)] // Pass parameters as arguments
     }
-    // PythonShell.runString(
 
-    // ).then((messages) => {
-    PythonShell.run(join(__dirname, '../../src/main/print.py'), pyoptions).then((messages) => {
+    const pythonScriptPath = path.join(__dirname, '..', 'main', 'print.py')
+
+    PythonShell.run(pythonScriptPath, pyoptions).then((messages) => {
       // results is an array consisting of messages collected during execution
       console.log('results: %j', messages)
     })
