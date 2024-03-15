@@ -35,23 +35,14 @@ print("Received parameters from JavaScript:", )
 # Open the printer
 hPrinter = win32print.OpenPrinter(printer_name) 
 try:
-    for _ in range(num_copies):  # Loop to print multiple copies
+    for _ in range(num_copies):
         # Start a print job
-        hJob = win32print.StartDocPrinter(hPrinter, 1, ("ZPL Label", None, "RAW"))
+        hJob = win32print.StartDocPrinter(hPrinter, 1, (f"ZPL Label - Copy{_+1}", None, "RAW"))
         try:
             win32print.StartPagePrinter(hPrinter)
             # Write ZPL code to the printer
             win32print.WritePrinter(hPrinter, zpl_code.encode())
             win32print.EndPagePrinter(hPrinter)
-            
-            # Additional steps to attempt to resolve the issue
-            
-            # Reset printer
-            win32print.SetPrinter(hPrinter, 2, None, 0)
-            
-            # Calibrate printer (if applicable)
-            # Instructions for calibration may vary depending on the printer model
-            
         finally:
             # End the print job
             win32print.EndDocPrinter(hPrinter)
