@@ -29,7 +29,7 @@ const createWindow = (): void => {
       mode: 'text',
       pythonPath: 'python', // Path to your Python interpreter
       pythonOptions: ['-u'], // unbuffered stdout
-      args: [JSON.stringify(options.deviceName)] // Pass parameters as arguments
+      args: [JSON.stringify(options)] // Pass parameters as arguments
     }
     // PythonShell.runString(
 
