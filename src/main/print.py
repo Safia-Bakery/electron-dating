@@ -1,25 +1,29 @@
 import win32print
+import sys
+import json
 
-# Receive parameters passed from JavaScript
+# Retrieve parameters passed from JavaScript
+options = json.loads(sys.argv[1])
 
-print('hi')
+# Extract device name from options
+device_name = options.get('deviceName', 'Unknown Device')
 
-# Your ZPL code 
-zpl_code = """
+# Modify the ZPL code to include device name
+zpl_code = f"""
 ^XA 
 ^MMT
 ^PW400
-^LL800  // Increased label length to 800 dots
+^LL800
 ^LS0 
-^FO50,20  // Moved the starting position down to 150 dots
-^A0N,60,60  // Increased font size to 60 dots
-^FDProduct Name^FS 
-^FO70,20  // Moved down to 250 dots
-^BQN,2,9  // QR code command. Format 2 specifies QR code, and the data is encoded as ASCII
-^FDMM,AWhats up mother fuckers^FS  // MM: Mode - A: Alphanumeric. You can adjust the mode based on your data type.
-^FO50,450  // Moved down to 450 dots
-^A0N,40,40  // Increased font size to 40 dots
-^FDPrice: $19.99^FS 
+^FO50,20
+^A0N,60,60
+^FDProduct Name: {device_name}^FS
+^FO70,25
+^BQN,2,9
+^FDMM,AWhats up mother fu*kers^FS
+^FO50,450
+^A0N,40,40
+^FDPrice: $19.99^FS
 ^XZ
 """
 

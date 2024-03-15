@@ -25,16 +25,16 @@ const createWindow = (): void => {
   })
 
   ipcMain.on('ipc-print', async (_, options: WebContentsPrintOptions) => {
-    const pyoptions:Options = {
+    const pyoptions: Options = {
       mode: 'text',
       pythonPath: 'python', // Path to your Python interpreter
       pythonOptions: ['-u'], // unbuffered stdout
-      args: [JSON.stringify(options)] // Pass parameters as arguments
+      args: [JSON.stringify(options.deviceName)] // Pass parameters as arguments
     }
     // PythonShell.runString(
-     
+
     // ).then((messages) => {
-      PythonShell.run('./src/main/print.py', pyoptions).then((messages) => {
+    PythonShell.run('./src/main/print.py', pyoptions).then((messages) => {
       // results is an array consisting of messages collected during execution
       console.log('results: %j', messages)
     })
