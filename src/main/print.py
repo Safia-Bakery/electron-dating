@@ -31,7 +31,7 @@ zpl_code = f"""
 # Get your Godex printer's EXACT name from Windows settings
 printer_name = "Godex G530"  # Replace with the actual name
 
-print("Received parameters from JavaScript:", )   
+print("Received parameters from JavaScript:", options)   
 # Open the printer
 hPrinter = win32print.OpenPrinter(printer_name) 
 try:
