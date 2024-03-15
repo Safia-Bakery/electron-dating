@@ -7,6 +7,7 @@ options = json.loads(sys.argv[1])
 
 # Extract device name from options
 device_name = options.get('deviceName')
+copies = options.get('copies')
 
 # Modify the ZPL code to include device name
 zpl_code = f"""
@@ -35,7 +36,7 @@ print("Received parameters from JavaScript:", )
 hPrinter = win32print.OpenPrinter(printer_name) 
 try:
     # Start a print job
-    hJob = win32print.StartDocPrinter(hPrinter, 1, ("ZPL Label", None, "RAW"))
+    hJob = win32print.StartDocPrinter(hPrinter, copies, ("ZPL Label", None, "RAW"))
     try:
         win32print.StartPagePrinter(hPrinter)
         # Write ZPL code to the printer
